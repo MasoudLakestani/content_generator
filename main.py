@@ -4,9 +4,9 @@ if __name__ == "__main__":
 
     uvicorn.run(
         'config:app',
-        # host="0.0.0.0",
-        host='localhost',
-        port=8000,  
+        host="0.0.0.0",
+        # host='localhost',
+        port=443,  
         reload=True
         # ssl_keyfile="/etc/letsencrypt/live/yourdomain.com/privkey.pem",
         # ssl_certfile="/etc/letsencrypt/live/yourdomain.com/fullchain.pem"
