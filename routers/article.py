@@ -29,4 +29,4 @@ def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
     except HTTPException as e:
         raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=e)
+        raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
