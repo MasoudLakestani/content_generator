@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "content-generator"
+version = "0.1.0"
+description = ""
+authors = ["masoud89"]
+readme = "README.md"
+packages = [{include = "content_generator"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.33.0"
+fastapi = "^0.111.0"
+bs4 = "^0.0.2"
+psycopg2 = "^2.9.9"
+sqlalchemy = "^2.0.30"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+alembic = "^1.13.1"
+jinja2 = "^3.1.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

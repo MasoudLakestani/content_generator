@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Keywords</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        input[type="text"], button {
+            padding: 8px;
+            width: 300px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Keyword Submission</h2>
+    <form id="keywordForm">
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+        </div>
+        <div class="form-group">
+            <label for="keyword1">Keyword 1:</label>
+            <input type="text" id="keyword1" name="keyword1">
+        </div>
+        <div class="form-group">
+            <label for="keyword2">Keyword 2:</label>
+            <input type="text" id="keyword2" name="keyword2">
+        </div>
+        <div class="form-group">
+            <label for="keyword3">Keyword 3:</label>
+            <input type="text" id="keyword3" name="keyword3">
+        </div>
+        <div class="form-group">
+            <label for="keyword4">Keyword 4:</label>
+            <input type="text" id="keyword4" name="keyword4">
+        </div>
+        <div class="form-group">
+            <label for="keyword5">Keyword 5:</label>
+            <input type="text" id="keyword5" name="keyword5">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="responseArea"></div>
+    
+    
+    <script>
+        document.getElementById('keywordForm').onsubmit = function(event) {
+            event.preventDefault();  // Prevent the default form submission
+    
+            var subject = document.getElementById('subject').value;
+            var keywords = [
+                document.getElementById('keyword1').value,
+                document.getElementById('keyword2').value,
+                document.getElementById('keyword3').value,
+                document.getElementById('keyword4').value,
+                document.getElementById('keyword5').value
+            ].filter(keyword => keyword.trim() !== ''); // Filter out empty keywords
+    
+            var data = { subject: subject, keywords: keywords };
+    
+            fetch('/api/v1/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseArea').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('responseArea').textContent = 'Failed to fetch article: ' + error.message;
+            });
+        };
+    </script>
+    
+
+    <!-- <script>
+        document.getElementById('keywordForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var subject = document.getElementById('subject').value;
+            var keywords = [
+                document.getElementById('keyword1').value,
+                document.getElementById('keyword2').value,
+                document.getElementById('keyword3').value,
+                document.getElementById('keyword4').value,
+                document.getElementById('keyword5').value
+            ].filter(keyword => keyword.trim() !== ''); // Filter out empty keywords
+
+            // Prepare the data to send
+            var data = { subject: subject, keywords: keywords };
+
+            fetch('/api/v1/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseArea').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+    </script> -->
+</body>
+</html>
