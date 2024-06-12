@@ -29,4 +29,4 @@ def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
     except HTTPException as e:
         raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail=e)
