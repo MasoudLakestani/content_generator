@@ -7,7 +7,7 @@ if __name__ == "__main__":
         host="0.0.0.0",
         # host='localhost',
         port=443,  
-        reload=True
+        # reload=True
         # ssl_keyfile="/etc/letsencrypt/live/yourdomain.com/privkey.pem",
         # ssl_certfile="/etc/letsencrypt/live/yourdomain.com/fullchain.pem"
     )

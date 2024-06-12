@@ -1,23 +1,25 @@
 FROM python:3.12-alpine
 
-WORKDIR /app
+# Set the working directory
+WORKDIR /app/content_generator
 
+# Install poetry
 RUN pip install poetry
 
-COPY ./poetry.lock ./pyproject.toml /app/
+# Copy only the poetry files first to leverage Docker caching
+COPY ./poetry.lock ./pyproject.toml /app/content_generator/
 
 # Don't create a virtualenv
 ENV POETRY_VIRTUALENVS_CREATE=false
-RUN poetry install --no-root 
+
+# Install dependencies
+RUN poetry install --no-root
 
 # Copy the rest of the code
-COPY . /app
-
-WORKDIR /app/content_generator
+COPY . /app/content_generator
 
 # Enable the venv
 ENV PATH="/root/.local/bin:$PATH"
 
-# Run the spiders
-CMD ["sh", "-c", "python main.py"]
-
+# Run the main.py
+CMD ["python", "main.py"]
