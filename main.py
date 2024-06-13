@@ -6,7 +6,7 @@ if __name__ == "__main__":
         'config:app',
         host="0.0.0.0",
         # host='localhost',
-        port=8000,  
+        port=80,  
         # reload=True
         # ssl_keyfile="/etc/letsencrypt/live/yourdomain.com/privkey.pem",
         # ssl_certfile="/etc/letsencrypt/live/yourdomain.com/fullchain.pem"
