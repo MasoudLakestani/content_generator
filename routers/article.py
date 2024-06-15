@@ -5,10 +5,21 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from painless.dependencies import get_api_key
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
+
+router.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Specify domains of clients allowed to access, or use '*' for open access
+    allow_credentials=True,
+    allow_methods=["*"],  # Specify which methods can be used to access the resource, or use '*' for all
+    allow_headers=["*"],  # Specify which headers can be used when making a request
+)
+
+
 
 @router.get("/api/v1/", response_class=HTMLResponse)
 # def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
