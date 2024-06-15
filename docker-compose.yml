@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  content_generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: content_generator
+    container_name: parsllm
+    restart: always  # Ensures the service always restarts
+    volumes:
+      - /etc/letsencrypt/live/parsllm.ir/fullchain.pem:/etc/letsencrypt/live/parsllm.ir/fullchain.pem
+      - /etc/letsencrypt/live/parsllm.ir/privkey.pem:/etc/letsencrypt/live/parsllm.ir/privkey.pem
+    ports:
+      - "443:443"
