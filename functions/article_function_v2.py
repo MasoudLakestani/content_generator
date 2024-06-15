@@ -48,16 +48,16 @@ def create_article(subject: str, keywords: Optional[List[str]]):
                     f"Use the provided keywords: {keywords} as headings throughout the article, "
                     "but only where they can be used appropriately. If you lack information about "
                     "a keyword, ignore it. Should there be fewer than three suitable headings, "
-                    "create additional appropriate headings based on your expertise. The article "
-                    "must contain at least 1000 words and be written in Persian. Conclude with a "
-                    "comprehensive summary under the 'نتیجه گیری' heading. Ensure the article is "
-                    "informative and uses a formal tone."
+                    "create additional appropriate headings based on your expertise. Each paragraph"
+                    "must contain at least 250 word and the article must contain at least 1000 words"
+                    "and be written in Persian. Conclude with a comprehensive summary under the "
+                    "'نتیجه گیری' heading. Ensure the article is informative and uses a formal tone."
                 )
             }
         ],
         model="gpt-4o-2024-05-13",
         temperature=0.7,
-        max_tokens=3000,
+        max_tokens=3500,
     )
 
     article = main_text.choices[0].message.content
