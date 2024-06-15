@@ -4,10 +4,9 @@ services:
   content_generator:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: content_generator
+      dockerfile: dockerfile
     container_name: parsllm
-    restart: always  # Ensures the service always restarts
+    restart: always
     volumes:
       - /etc/letsencrypt/live/parsllm.ir/fullchain.pem:/etc/letsencrypt/live/parsllm.ir/fullchain.pem
       - /etc/letsencrypt/live/parsllm.ir/privkey.pem:/etc/letsencrypt/live/parsllm.ir/privkey.pem
