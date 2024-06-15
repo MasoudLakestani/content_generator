@@ -60,6 +60,6 @@ def create_article(subject: str, keywords: Optional[List[str]]):
         max_tokens=3000,
     )
 
-    article = {subject} + "\n" + main_text.choices[0].message.content
+    article = main_text.choices[0].message.content
 
     return article
