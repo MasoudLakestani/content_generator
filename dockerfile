@@ -1,7 +1,7 @@
 FROM python:3.12-alpine
 
 # Install necessary packages
-RUN apt-get update && apt-get install -y libssl-dev
+RUN apk update && apk add --no-cache libressl-dev
 
 # Set the working directory
 WORKDIR /app/content_generator
