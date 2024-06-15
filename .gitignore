@@ -4,3 +4,4 @@ settings.toml
 no_edited.py
 __pycache__/
 migrations/versions/*
+my_test
