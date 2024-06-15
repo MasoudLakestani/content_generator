@@ -7,7 +7,7 @@ from settings import config
 
 API_KEY = config['openai']['API_KEY']
 
-def create_article(subject: str, keywords: Optional[List[str]]):
+def create_article_v1(subject: str, keywords: Optional[List[str]]):
     persuasive_mode = (
         f"Use persuasive language to engage the reader, presenting compelling "
         f"arguments and evidence to support your viewpoints on the {subject}. "

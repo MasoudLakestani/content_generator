@@ -7,7 +7,7 @@ from settings import config
 
 API_KEY = config['openai']['API_KEY']
 
-def create_article(subject: str, keywords: Optional[List[str]]):
+def create_article_v2(subject: str, keywords: Optional[List[str]]):
 
     client = OpenAI(api_key=API_KEY)
 

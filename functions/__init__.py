@@ -1,1 +1,2 @@
-from .article_function_v2 import create_article
+from .article_function_v1 import create_article_v1
+from .article_function_v2 import create_article_v2

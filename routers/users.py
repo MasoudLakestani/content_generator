@@ -2,7 +2,6 @@
 import models
 import schemas
 from sqlalchemy.orm import Session
-from functions import create_article
 from fastapi import APIRouter, Depends, HTTPException
 from painless.dependencies import get_db, get_register_key
 
