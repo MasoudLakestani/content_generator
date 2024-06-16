@@ -11,6 +11,26 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
 
+@router.post("/api/v1/", response_class=HTMLResponse)
+def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
+# def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
+    try:
+        if not param.subject:
+            raise HTTPException(status_code=400, detail="Subject is required")
+        
+        if not param.keywords:
+            raise HTTPException(status_code=400, detail="At least one keyword is required")
+        article = create_article_v1(param.subject, param.keywords)
+        
+        if not article:
+            raise HTTPException(status_code=404, detail="Article not found")
+        
+        return HTMLResponse(content=article, status_code=200)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
+
 @router.get("/api/v1/", response_class=HTMLResponse)
 # def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
 def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
@@ -21,7 +41,6 @@ def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
         if not keywords:
             raise HTTPException(status_code=400, detail="At least one keyword is required")
         article = create_article_v1(subject, keywords)
-        # article = create_article(param.subject, param.keywords)
         
         if not article:
             raise HTTPException(status_code=404, detail="Article not found")
@@ -33,6 +52,27 @@ def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
         raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
 
 
+@router.post("/api/v2/", response_class=HTMLResponse)
+def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
+# def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
+    try:
+        if not param.subject:
+            raise HTTPException(status_code=400, detail="Subject is required")
+        
+        if not param.keywords:
+            raise HTTPException(status_code=400, detail="At least one keyword is required")
+        article = create_article_v2(param.subject, param.keywords)
+        
+        if not article:
+            raise HTTPException(status_code=404, detail="Article not found")
+        
+        return HTMLResponse(content=article, status_code=200)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
+    
+
 @router.get("/api/v2/", response_class=HTMLResponse)
 # def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
 def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
@@ -43,7 +83,6 @@ def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
         if not keywords:
             raise HTTPException(status_code=400, detail="At least one keyword is required")
         article = create_article_v2(subject, keywords)
-        # article = create_article(param.subject, param.keywords)
         
         if not article:
             raise HTTPException(status_code=404, detail="Article not found")
