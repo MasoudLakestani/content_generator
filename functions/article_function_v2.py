@@ -36,7 +36,7 @@ def create_article_v2(subject: str, keywords: Optional[List[str]]):
                     "enhance search engine visibility. Please submit the text you want formatted "
                     "for your HTML article. Ensure your submission includes potential headings, "
                     "and note that the final format will correct any spelling or grammatical "
-                    "errors, apply HTML <h3> tags to headings."
+                    "errors, apply HTML <h2> tags to headings."
                 )
             },
             {

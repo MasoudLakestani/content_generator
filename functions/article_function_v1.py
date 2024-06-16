@@ -135,7 +135,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]]):
                 "role": "system",
                 "content": (
                     "Please submit the text you want formatted for your HTML article. Ensure your submission includes potential headings, "
-                    "and note that the final format will correct any spelling or grammatical errors, remove duplicate content, apply HTML <h3> "
+                    "and note that the final format will correct any spelling or grammatical errors, remove duplicate content, apply HTML <h2> "
                     "tags to headings, remove unnecessary white spaces, and delete blank lines to optimize for web presentation."
                 )
             },
