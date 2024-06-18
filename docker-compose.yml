@@ -12,3 +12,22 @@ services:
       - /etc/letsencrypt/live/parsllm.ir/privkey.pem:/etc/letsencrypt/live/parsllm.ir/privkey.pem
     ports:
       - "443:443"
+    networks:
+      - webnet
+
+
+  db:
+    image: postgres:latest
+    volumes:
+      - /home/devops8968/psql/data:/var/lib/postgresql/data
+      - /home/devops8968/psql/conf/postgresql.conf:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - webnet
+
+networks:
+  webnet:
+
