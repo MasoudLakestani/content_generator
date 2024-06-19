@@ -130,18 +130,22 @@ def create_article_v1(subject: str, keywords: Optional[List[str]]):
     article += conclusion.choices[0].message.content
 
     edited_article = client.chat.completions.create(
-        messages=[
+        messages = [
             {
                 "role": "system",
                 "content": (
-                    "Please submit the text you want formatted for your HTML article. Ensure your submission includes potential headings, "
-                    "and note that the final format will correct any spelling or grammatical errors, remove duplicate content, apply HTML <h2> "
-                    "tags to headings, remove unnecessary white spaces, and delete blank lines to optimize for web presentation."
+                    "You are assigned the role of a text editor. I will provide you with an article "
+                    "Your tasks include correcting any spelling or grammatical errors and removing any duplicate "
+                    "content. Please use HTML <h2> tags to designate section headings. "
+                    "Additionally, you should eliminate all unnecessary white spaces and delete "
+                    "all blank lines to ensure the content is optimized for web presentation. "
+                    "Ensure that the text is clear, concise, and well-organized to enhance "
+                    "readability and SEO performance."
                 )
             },
             {
                 "role": "user",
-                "content": f"edit {article}"
+                "content": f"Please edit and format the following article as specified: {article}"
             }
         ],
         model="gpt-4o-2024-05-13",
@@ -149,4 +153,4 @@ def create_article_v1(subject: str, keywords: Optional[List[str]]):
         max_tokens=3000,
     )
 
-    return edited_article.choices[0].message.content
+    return {"article":edited_article.choices[0].message.content}
