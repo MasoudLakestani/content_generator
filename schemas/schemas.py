@@ -4,6 +4,8 @@ from pydantic import BaseModel # type: ignore
 class Parameter(BaseModel):
     subject:str
     keywords: Optional[List[str]]
+    tone:int
+    brand_name:str
 
 class UserBase(BaseModel):
     username:str
