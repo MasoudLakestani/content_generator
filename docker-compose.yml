@@ -25,7 +25,7 @@ services:
     image: postgres:latest
     volumes:
       - /home/devops8968/psql/data:/var/lib/postgresql/data
-      - /home/devops8968/psql/conf/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - /home/devops8968/psql/conf:/etc/postgresql/conf
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
