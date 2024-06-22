@@ -10,7 +10,7 @@ services:
     volumes:
       - /etc/letsencrypt/live/parsllm.ir/fullchain.pem:/etc/letsencrypt/live/parsllm.ir/fullchain.pem
       - /etc/letsencrypt/live/parsllm.ir/privkey.pem:/etc/letsencrypt/live/parsllm.ir/privkey.pem
-      - home/devops8968/content_generator/migrations/versions:/app/content_generator/migrations/versions
+      - ./migrations/versions:/app/content_generator/migrations/versions
     ports:
       - "443:443"
     networks:
