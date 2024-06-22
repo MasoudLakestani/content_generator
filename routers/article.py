@@ -12,8 +12,8 @@ router = APIRouter()
 templates = Jinja2Templates(directory='templates')
 
 @router.post("/api/v1/", response_class=JSONResponse)
-def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
-# def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
+def get_article(param:schemas.Parameter, api_key:str=Depends(get_api_key)):
+
     try:
         if not param.subject:
             raise HTTPException(status_code=400, detail="Subject is required")
@@ -32,30 +32,10 @@ def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
 
-@router.get("/api/v1/", response_class=JSONResponse)
-# def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
-def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
-    try:
-        if not subject:
-            raise HTTPException(status_code=400, detail="Subject is required")
-        
-        if not keywords:
-            raise HTTPException(status_code=400, detail="At least one keyword is required")
-        article = create_article_v1(subject, keywords)
-        
-        if not article:
-            raise HTTPException(status_code=404, detail="Article not found")
-        
-        return JSONResponse(content=article, status_code=200)
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
-
 
 @router.post("/api/v2/", response_class=JSONResponse)
-def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
-# def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
+def get_article(param:schemas.Parameter, api_key:str=Depends(get_api_key)):
+
     try:
         if not param.subject:
             raise HTTPException(status_code=400, detail="Subject is required")
@@ -73,23 +53,3 @@ def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
     
-
-@router.get("/api/v2/", response_class=JSONResponse)
-# def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
-def get_article(subject: str, keywords: Optional[List[str]] = Query(None)):
-    try:
-        if not subject:
-            raise HTTPException(status_code=400, detail="Subject is required")
-        
-        if not keywords:
-            raise HTTPException(status_code=400, detail="At least one keyword is required")
-        article = create_article_v2(subject, keywords)
-        
-        if not article:
-            raise HTTPException(status_code=404, detail="Article not found")
-        
-        return JSONResponse(content=article, status_code=200)
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error accrued in openai server | {e}")
