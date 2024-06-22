@@ -14,6 +14,11 @@ services:
       - "443:443"
     networks:
       - webnet
+    command: >
+      /bin/sh -c "
+      alembic upgrade head"
+    depends_on:
+      - db
 
 
   db:
