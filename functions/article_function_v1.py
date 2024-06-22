@@ -18,7 +18,8 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
 
     brand = None
     if brand_name:
-        brand = f"Incorporate {brand_name} throughout the article to introduce and promote the brand."
+        brand = f"Incorporate the brand name {brand_name} throughout the article to strategically promote and introduce the brand. "
+        f"Note that {brand_name}' may not be the manufacturer but merely the seller or distributor; ensure the article."
 
     client = OpenAI(api_key=API_KEY)
     article = subject + "\n"
