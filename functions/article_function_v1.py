@@ -134,7 +134,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                 "content": (
                     "You are assigned the role of a text editor. I will provide you with an article "
                     "Your tasks include correcting any spelling or grammatical errors and removing any duplicate "
-                    "content. Please use HTML <h2> tags to designate section headings. "
+                    "content. Please use HTML <h2> tags to designate section headings. and <p> tags for paragraphs to structure the document appropriately."
                     "Additionally, you should eliminate all unnecessary white spaces and delete "
                     "all blank lines to ensure the content is optimized for web presentation. "
                     "Ensure that the text is clear, concise, and well-organized to enhance "
