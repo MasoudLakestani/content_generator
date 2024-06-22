@@ -20,7 +20,11 @@ def get_article(param:schemas.Parameter):#api_key:str=Depends(get_api_key)):
         
         if not param.keywords:
             raise HTTPException(status_code=400, detail="At least one keyword is required")
-        article = create_article_v1(param.subject, param.keywords)
+        if not param.tone:
+            param.tone = 1
+        if not param.brand_name:
+            param.brand_name = None
+        article = create_article_v1(param.subject, param.keywords, param.tone, param.brand_name)
         
         if not article:
             raise HTTPException(status_code=404, detail="Article not found")

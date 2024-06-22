@@ -7,21 +7,18 @@ from settings import config
 
 API_KEY = config['openai']['API_KEY']
 
-def create_article_v1(subject: str, keywords: Optional[List[str]]):
-    persuasive_mode = (
-        f"Use persuasive language to engage the reader, presenting compelling "
-        f"arguments and evidence to support your viewpoints on the {subject}. "
-        f"The article should not only inform but also persuade the reader of the "
-        f"significance and relevance of the topic."
-    )
+def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, brand_name:str=None):
 
-    informative_mode = (
-        f"Use clear and precise language to present information comprehensively "
-        f"about the {subject}. Include relevant data, facts, and figures to support "
-        f"your explanations, ensuring the article is both informative and engaging. "
-        f"Aim to educate the reader on the significance and details of the topic, while "
-        f"utilizing the keywords effectively as headings to improve SEO and readability."
-    )
+    tone_dict = {
+        1:"Use an informative tone for writing this article.",
+        2:"Use an informative tone for writing this article.",
+        3:"Use an informative tone for writing this article.",
+        4:"Use a persuasive tone to write this article."
+    }
+
+    brand = None
+    if brand_name:
+        brand = f"Incorporate {brand_name} throughout the article to introduce and promote the brand."
 
     client = OpenAI(api_key=API_KEY)
     article = subject + "\n"
@@ -62,13 +59,14 @@ def create_article_v1(subject: str, keywords: Optional[List[str]]):
                 "content": (
                     f"Compose a detailed and engaging main body for an article about {subject}, ensuring it "
                     f"is devoid of any spelling or grammatical errors. {used_information} Find an attractive "
+                    f"{brand}"
                     f"heading and begin with a paragraph about that heading. Then use these keywords: {keywords} "
                     f"as headings throughout the article, but only where they naturally fit the content. Should there "
                     f"be fewer than three suitable headings, draw upon your expertise to create additional appropriate "
                     f"headings. The article must contain at least 800 words and be written in Persian. Focus exclusively "
                     f"on delivering the main content without including any introductory or concluding elements. Specifically, "
                     f"avoid any summarizing paragraphs or statements like 'نتیجه گیری' or 'جمع بندی' that could be interpreted "
-                    f"as conclusions, ensuring the text consists only of substantive content without any introduction and conclusion. {informative_mode}"
+                    f"as conclusions, ensuring the text consists only of substantive content without any introduction and conclusion. {tone_dict[tone]}"
                 )
             }
         ],
