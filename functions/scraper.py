@@ -10,4 +10,4 @@ def scrape_result(urls:Optional[list]):
         soup = BeautifulSoup(response.text, 'html.parser')
         data = soup.get_text()
         info += data
-        return info        
+        return info, response.status_code     

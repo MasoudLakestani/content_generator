@@ -14,6 +14,7 @@ def search(query, lang="fa"):
     soup = BeautifulSoup(response.text, "html.parser")
     result_block = soup.find_all("div", attrs={"class": "g"})
     links = list()
+    filtered_urls = ["telewebion", "aparat", "youtube"]
     for result in result_block:
         link = result.find("a", href=True)
         title = result.find("h3")
@@ -22,7 +23,12 @@ def search(query, lang="fa"):
         if description_box:
             description = description_box.text
             if link and title and description:
-                links.append(link["href"])
+                filter = False
+                for filter_key in filtered_urls:
+                    if filter_key in link["href"]:
+                        filter = True
+                if filter is not True:
+                    links.append(link["href"])   
     return links
 
 
