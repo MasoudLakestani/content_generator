@@ -7,6 +7,18 @@ from settings import config
 
 API_KEY = config['openai']['API_KEY']
 
+def check_information(client, value):
+    have_information = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": f"Do you have any information about exact {value}? Just say yes or no. not nothing else"
+            } 
+        ],
+        model="gpt-4o-2024-05-13",
+    )
+    return have_information.choices[0].message.content.lower().replace(".", "")
+
 def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, brand_name:str=None):
 
     tone_dict = {
@@ -24,26 +36,24 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
     client = OpenAI(api_key=API_KEY)
     article = subject + "\n"
 
-    have_information = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": f"Do you have any information about {subject}? Just say yes or no."
-            }
-        ],
-        model="gpt-4o-2024-05-13",
-    )
-
     used_information = ""
-    if have_information.choices[0].message.content.lower().replace(".", "") == "no":
-        scrape_url = search(subject)[:6 - len(keywords)]
-        for key in keywords:
-            scrape_url.append(search(key)[0])
-        google_information = scrape_result(scrape_url)
-        used_information = (
-            f"Use only the information provided: {google_information}. Do not use your information."
-        )
+    retrieved_information = ""
+    check = check_information(client, subject)[:2]
 
+    if check == "no":
+        scrape_url = search(subject)
+        counter = 0
+        for url in scrape_url:
+            google_information = scrape_result([url])
+            if google_information[1] == 200:
+                retrieved_information += google_information[0]
+                counter += 1
+            if counter >= 2:
+                break
+
+        used_information = (
+            f"Use only the information provided: {retrieved_information}. Do not use your information."
+                )
     main_text = client.chat.completions.create(
         messages=[
             {
