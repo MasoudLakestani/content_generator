@@ -4,20 +4,28 @@ from openai import OpenAI
 from .scraper import scrape_result
 from .google_urls import search
 from settings import config
+from tokencost import calculate_completion_cost, calculate_prompt_cost, count_string_tokens
 
 API_KEY = config['openai']['API_KEY']
+model = "gpt-4o-2024-05-13"
 
 def check_information(client, value):
-    have_information = client.chat.completions.create(
-        messages=[
+    check_information_prompt = [
             {
                 "role": "user",
                 "content": f"Do you have any information about exact {value}? Just say yes or no. not nothing else"
             } 
-        ],
-        model="gpt-4o-2024-05-13",
+        ]
+    
+    have_information = client.chat.completions.create(
+        messages=check_information_prompt,
+        model=model
     )
-    return have_information.choices[0].message.content.lower().replace(".", "")
+    information_completions = have_information.choices[0].message.content
+    information_prompt_cost = calculate_prompt_cost(check_information_prompt, model)
+    information_completions_cost = calculate_completion_cost(information_completions, model)
+    information_cost = information_prompt_cost + information_completions_cost
+    return information_completions.lower().replace(".", ""), information_cost
 
 def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, brand_name:str=None):
 
@@ -38,7 +46,8 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
 
     used_information = ""
     retrieved_information = ""
-    check = check_information(client, subject)[:2]
+    check = check_information(client, subject)[0][:2]
+    check_cost = check_information(client, subject)[1]
 
     if check == "no":
         scrape_url = search(subject)
@@ -54,8 +63,8 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
         used_information = (
             f"Use only the information provided: {retrieved_information}. Do not use your information."
                 )
-    main_text = client.chat.completions.create(
-        messages=[
+
+    main_text_prompt = [
             {
                 "role": "system",
                 "content": (
@@ -80,14 +89,19 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                     f"as conclusions, ensuring the text consists only of substantive content without any introduction and conclusion. {tone_dict[tone]}"
                 )
             }
-        ],
-        model="gpt-4o-2024-05-13",
+        ]  
+    main_text = client.chat.completions.create(
+        messages=main_text_prompt,
+        model=model,
         temperature=0.7,
         max_tokens=2000,
     )
+    main_text_completions = main_text.choices[0].message.content
+    main_text_prompt_cost = calculate_prompt_cost(main_text_prompt, model)
+    main_text_completions_cost = calculate_completion_cost(main_text_completions, model)
+    main_text_cost = main_text_prompt_cost + main_text_completions_cost
 
-    introduction = client.chat.completions.create(
-        messages=[
+    introduction_prompt = [
             {
                 "role": "system",
                 "content": (
@@ -100,20 +114,26 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
             {
                 "role": "user",
                 "content": (
-                    f"Generate an introduction for the provided main text. Main text: {main_text.choices[0].message.content}. "
+                    f"Generate an introduction for the provided main text. Main text: {main_text_completions}. "
                     "Avoid duplication in the introduction and main text. Use the word 'مفدمه' at the start of the introduction."
                 )
             }
-        ],
-        model="gpt-4o-2024-05-13",
+        ]
+    introduction = client.chat.completions.create(
+        messages=introduction_prompt,
+        model=model,
         temperature=0.7,
         max_tokens=800,
     )
+    introduction_completions = introduction.choices[0].message.content
+    introduction_prompt_cost = calculate_prompt_cost(introduction_prompt, model)
+    introduction_completions_cost = calculate_completion_cost(introduction_completions, model)
+    introduction_cost = introduction_prompt_cost + introduction_completions_cost
 
-    article = introduction.choices[0].message.content + "\n" + main_text.choices[0].message.content + "\n"
+    article = introduction_completions + "\n" + main_text_completions + "\n"
 
-    conclusion = client.chat.completions.create(
-        messages=[
+
+    conclusion_prompt = [
             {
                 "role": "system",
                 "content": (
@@ -131,15 +151,21 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                     "'نتیجه گیری' at the start of the conclusion."
                 )
             }
-        ],
-        model="gpt-4o-2024-05-13",
+        ]
+    conclusion = client.chat.completions.create(
+        messages=conclusion_prompt,
+        model=model,
         temperature=0.7,
         max_tokens=800,
     )
-    article += conclusion.choices[0].message.content
+    conclusion_completions = conclusion.choices[0].message.content
+    conclusion_prompt_cost = calculate_prompt_cost(conclusion_prompt, model)
+    conclusion_completions_cost = calculate_completion_cost(conclusion_completions, model)
+    conclusion_cost = conclusion_prompt_cost + conclusion_completions_cost
 
-    edited_article = client.chat.completions.create(
-        messages = [
+    article += conclusion_completions
+
+    edit_prompt = [
             {
                 "role": "system",
                 "content": (
@@ -158,10 +184,21 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                 "role": "user",
                 "content": f"Please edit and format the following article as specified: {article}"
             }
-        ],
-        model="gpt-4o-2024-05-13",
+        ]
+    edited_article = client.chat.completions.create(
+        messages = edit_prompt ,
+        model=model,
         temperature=0.7,
         max_tokens=3000,
     )
+    edit_completions = edited_article.choices[0].message.content
+    edit_prompt_cost = calculate_prompt_cost(edit_prompt, model)
+    edit_completions_cost = calculate_completion_cost(edit_completions, model)
+    edit_cost = edit_prompt_cost + edit_completions_cost
 
-    return {"article":edited_article.choices[0].message.content}
+    cost = check_cost + main_text_cost + introduction_cost + conclusion_cost + edit_cost
+
+    return {
+        "article":edit_completions,
+        "cost": float(cost)
+        }
