@@ -7,6 +7,18 @@ from settings import config
 
 API_KEY = config['openai']['API_KEY']
 
+def check_information(client, value):
+    have_information = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": f"Do you have any information about exact {value}? Just say yes or no. not nothing else"
+            } 
+        ],
+        model="gpt-4o-2024-05-13",
+    )
+    return have_information.choices[0].message.content.lower().replace(".", "")
+
 def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, brand_name:str=None):
 
     tone_dict = {
@@ -18,31 +30,30 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
 
     brand = None
     if brand_name:
-        brand = f"Incorporate {brand_name} throughout the article to introduce and promote the brand."
+        brand = f"Incorporate the brand name {brand_name} throughout the article to strategically promote and introduce the brand. "
+        f"Note that {brand_name}' may not be the manufacturer but merely the seller or distributor; ensure the article."
 
     client = OpenAI(api_key=API_KEY)
     article = subject + "\n"
 
-    have_information = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": f"Do you have any information about {subject}? Just say yes or no."
-            }
-        ],
-        model="gpt-4o-2024-05-13",
-    )
-
     used_information = ""
-    if have_information.choices[0].message.content.lower().replace(".", "") == "no":
-        scrape_url = search(subject)[:6 - len(keywords)]
-        for key in keywords:
-            scrape_url.append(search(key)[0])
-        google_information = scrape_result(scrape_url)
-        used_information = (
-            f"Use only the information provided: {google_information}. Do not use your information."
-        )
+    retrieved_information = ""
+    check = check_information(client, subject)[:2]
 
+    if check == "no":
+        scrape_url = search(subject)
+        counter = 0
+        for url in scrape_url:
+            google_information = scrape_result([url])
+            if google_information[1] == 200:
+                retrieved_information += google_information[0]
+                counter += 1
+            if counter >= 2:
+                break
+
+        used_information = (
+            f"Use only the information provided: {retrieved_information}. Do not use your information."
+                )
     main_text = client.chat.completions.create(
         messages=[
             {
@@ -135,6 +146,8 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                     "You are assigned the role of a text editor. I will provide you with an article "
                     "Your tasks include correcting any spelling or grammatical errors and removing any duplicate "
                     "content. Please use HTML <h2> tags to designate section headings. and <p> tags for paragraphs to structure the document appropriately."
+                    "Use the <b> tag to embolden any of the following keywords in the article: "
+                    f"{', '.join(keywords)}. Please note that you should not bold the words when they appear in headings."
                     "Additionally, you should eliminate all unnecessary white spaces and delete "
                     "all blank lines to ensure the content is optimized for web presentation. "
                     "Ensure that the text is clear, concise, and well-organized to enhance "
