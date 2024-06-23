@@ -83,7 +83,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                     f"about that heading. Then use these keywords: {', '.join(keywords)} as headings throughout "
                     f"the article, but only where they naturally fit the content. Ensure that the "
                     "keywords may include a question. Answer the question and utilize these as headings. "
-                    "Exercise caution when incorporating question-based keywords into your article. It is crucial to use them in a manner that maintains the semantic integrity of the article. Ensure that these keywords blend seamlessly into the content, supporting and enhancing the overall structure without disrupting the flow or coherence of the text. "
+                    "Exercise caution when incorporating question-based keywords into your article. Some keywords inherently pose questions but may lack the expected punctuation, such as a question mark. Watch for words like 'چرا' and 'چگونه', among others. It's vital to recognize and handle these keywords properly within the context of your article. Their correct usage is crucial to maintaining the semantic integrity of the content. Ensure that these keywords blend seamlessly into the narrative, supporting and enhancing the overall structure without disrupting the natural flow or coherence of the text. "
                     "Should there be fewer than three suitable headings, draw upon your expertise to create "
                     "additional appropriate headings. The article must contain at least 800 words and be "
                     "written in Persian. Focus exclusively on delivering the main content without including "
