@@ -48,7 +48,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
     retrieved_information = ""
     check = check_information(client, subject)[0][:2]
     check_cost = check_information(client, subject)[1]
-    print(check)
+
     if check == "no":
         scrape_url = search(subject)
         counter = 0
@@ -77,19 +77,24 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
             {
                 "role": "user",
                 "content": (
-                    f"Compose a detailed and engaging main body for an article about {subject}, ensuring it "
-                    f"is devoid of any spelling or grammatical errors. {used_information} Find an attractive "
-                    f"{brand}"
-                    f"heading and begin with a paragraph about that heading. Then use these keywords: {keywords} "
-                    f"as headings throughout the article, but only where they naturally fit the content. Should there "
-                    f"be fewer than three suitable headings, draw upon your expertise to create additional appropriate "
-                    f"headings. The article must contain at least 800 words and be written in Persian. Focus exclusively "
-                    f"on delivering the main content without including any introductory or concluding elements. Specifically, "
-                    f"avoid any summarizing paragraphs or statements like 'نتیجه گیری' or 'جمع بندی' that could be interpreted "
-                    f"as conclusions, ensuring the text consists only of substantive content without any introduction and conclusion. {tone_dict[tone]}"
+                    f"Compose a detailed and engaging main body for an article about {subject}, "
+                    f"ensuring it is devoid of any spelling or grammatical errors. {brand}. {used_information}"
+                    "Find an attractive heading and begin with a paragraph "
+                    f"about that heading. Then use these keywords: {', '.join(keywords)} as headings throughout "
+                    f"the article, but only where they naturally fit the content. Ensure that the "
+                    "keywords may include a question. Answer the question and utilize these as headings. "
+                    "Exercise caution when incorporating question-based keywords into your article. It is crucial to use them in a manner that maintains the semantic integrity of the article. Ensure that these keywords blend seamlessly into the content, supporting and enhancing the overall structure without disrupting the flow or coherence of the text. "
+                    "Should there be fewer than three suitable headings, draw upon your expertise to create "
+                    "additional appropriate headings. The article must contain at least 800 words and be "
+                    "written in Persian. Focus exclusively on delivering the main content without including "
+                    "any introductory or concluding elements. Specifically, avoid any summarizing paragraphs "
+                    f"or statements like 'نتیجه گیری' or 'جمع بندی' that could be interpreted as conclusions, "
+                    f"ensuring the text consists only of substantive content without any introduction and "
+                    f"conclusion. {tone_dict[tone]}"
                 )
             }
-        ]  
+        ]
+
     main_text = client.chat.completions.create(
         messages=main_text_prompt,
         model=model,
