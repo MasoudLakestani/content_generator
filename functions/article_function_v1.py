@@ -165,15 +165,16 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
 
     article += conclusion_completions
 
-    edit_prompt = [
+    edit_prompt =[
             {
                 "role": "system",
                 "content": (
-                    "You are assigned the role of a text editor. I will provide you with an article "
+                    "You are assigned the role of a text editor. I will provide you with an article. "
                     "Your tasks include correcting any spelling or grammatical errors and removing any duplicate "
-                    "content. Please use HTML <h2> tags to designate section headings. and <p> tags for paragraphs to structure the document appropriately."
-                    "Use the <b> tag to embolden any of the following keywords in the article: "
-                    f"{', '.join(keywords)}. Please note that you should not bold the words when they appear in headings."
+                    "content. This includes identifying and eliminating any duplicated sections, such as multiple conclusions or 'نتیجه گیری', "
+                    "and ensuring there is no redundant information throughout the article. Please use HTML <h2> tags to designate section headings, "
+                    "and <p> tags for paragraphs to structure the document appropriately. Use the <b> tag to embolden any of the following keywords in the article: "
+                    f"{', '.join(keywords)}. Please note that you should not bold the words when they appear in headings. "
                     "Additionally, you should eliminate all unnecessary white spaces and delete "
                     "all blank lines to ensure the content is optimized for web presentation. "
                     "Ensure that the text is clear, concise, and well-organized to enhance "
@@ -185,6 +186,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                 "content": f"Please edit and format the following article as specified: {article}"
             }
         ]
+
     edited_article = client.chat.completions.create(
         messages = edit_prompt ,
         model=model,
