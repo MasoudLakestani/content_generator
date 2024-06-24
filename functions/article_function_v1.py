@@ -29,6 +29,9 @@ def check_information(client, value):
 
 def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, brand_name:str=None):
 
+    filtered_words = [
+        "در دنیای امروز"
+    ]
     tone_dict = {
         1:"Use an informative tone for writing this article.",
         2:"Use an informative tone for writing this article.",
@@ -48,7 +51,6 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
     retrieved_information = ""
     check = check_information(client, subject)[0][:2]
     check_cost = check_information(client, subject)[1]
-
     if check == "no":
         scrape_url = search(subject)
         counter = 0
@@ -79,6 +81,7 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                 "content": (
                     f"Compose a detailed and engaging main body for an article about {subject}, "
                     f"ensuring it is devoid of any spelling or grammatical errors. {brand}. {used_information}"
+                    f"Avoid using the phrase {filtered_words} or any similar words or phrases."
                     "Find an attractive heading and begin with a paragraph "
                     f"about that heading. Then use these keywords: {', '.join(keywords)} as headings throughout "
                     f"the article, but only where they naturally fit the content. Ensure that the "
@@ -175,6 +178,8 @@ def create_article_v1(subject: str, keywords: Optional[List[str]], tone:int=1, b
                 "role": "system",
                 "content": (
                     "You are assigned the role of a text editor. I will provide you with an article. "
+                    f"Remove the words and phrases specified: {filtered_words} if they appear in the article."
+                    "Be careful, as removing these words should not destroy the semantic integrity of the content."
                     "Your tasks include correcting any spelling or grammatical errors and removing any "
                     "duplicate content. This process involves identifying and removing any duplicate "
                     "sections within the document, such as multiple conclusions ('نتیجه گیری', ''). It also "
