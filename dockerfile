@@ -25,4 +25,4 @@ RUN pip install gunicorn
 COPY . /app/content_generator
 
 # Set the command to use Gunicorn with Uvicorn workers
-CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "12", "--bind", "0.0.0.0:443", "--keyfile", "/etc/letsencrypt/live/parsllm.ir/privkey.pem", "--certfile", "/etc/letsencrypt/live/parsllm.ir/fullchain.pem", "config:app"]
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-w", "10", "--bind", "0.0.0.0:443", "--keyfile", "/etc/letsencrypt/live/parsllm.ir/privkey.pem", "--certfile", "/etc/letsencrypt/live/parsllm.ir/fullchain.pem", "config:app"]
