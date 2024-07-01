@@ -9,11 +9,13 @@ def get_api_key(request: Request, db: Session = Depends(get_db)):
     if api_key is None: #or not api_key.startswith("Bearer "):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="API Key is missing or improperly formatted")
     
-    api_key = api_key# # Get the actual key past 'Bearer'
-    user = db.query(models.User).filter(models.User.api_key == api_key).first()
-    if not user:
+    # api_key = api_key# # Get the actual key past 'Bearer'
+    # user = db.query(models.User).filter(models.User.api_key == api_key).first()
+    # if not user:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API Key")
+    # return user
+    if not api_key == "kv1y28Bngeiv2z7Gl84SUdWR6iH1KW0GrEPppM2q7-w":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API Key")
-    return user
 
 
 def get_register_key(request: Request, db: Session = Depends(get_db)):
